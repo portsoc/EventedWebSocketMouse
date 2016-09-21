@@ -3,6 +3,7 @@ var
 	connect = require('connect'),
 	serveStatic = require('serve-static'),
 	ipaddr = require('os').networkInterfaces().en0[1].address,
+  counter = 0,
 
 	// used to handle the page interactions
 	ws_svr = require('ws').Server,
@@ -14,11 +15,19 @@ var
 
 	ws_responder = function(ws) {
 
+    // on connection, send an init packet with a new id
+    ws.send(
+      JSON.stringify(
+        {
+          "type": "init",
+          "myid": `${ws.upgradeReq.connection.remoteAddress}_${++counter}`
+        }
+      )
+    );
+
 		ws.on(
 			'message',
 			function(message) {
-				// console.log('received: %s', message);
-
 				for (var i = wss.clients.length - 1; i >= 0; i--) {
 					wss.clients[i].send(message);
 				}
