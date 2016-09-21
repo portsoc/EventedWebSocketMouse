@@ -1,6 +1,6 @@
 var
     d,
-    ws = new WebSocket("ws://"+window.location.hostname+":9090/"),
+    ws = new WebSocket("ws://" + window.location.hostname + ":9090/"),
     myid = new Date().toString().replace(/[\W]+/g, ""),
     col = Math.random().toString(16).substring(2, 8),
 
@@ -11,7 +11,7 @@ var
                     x: e.pageX * 100 / document.body.scrollWidth,
                     y: e.pageY * 100 / document.body.scrollHeight,
                     id: myid,
-                    player: (player.value == "Who are you?" ? "Anon" : player.value),
+                    player: window.player.value || "Anon",
                     col: col
                 }
             )
@@ -21,15 +21,15 @@ var
 
 // this is what happens when a messages is pushed from
 // the sever to the websocket
-ws.onmessage = function (e) {
+ws.onmessage = function(e) {
     var q = JSON.parse(e.data);
 
     d = document.getElementById(q.id);
     if (!d) {
-        d=document.createElement("div");
+        d = document.createElement("div");
         d.classList.add("out");
         d.setAttribute("id", q.id);
-        game.appendChild(d);
+        window.game.appendChild(d);
     }
 
     d.textContent = q.player;
@@ -42,5 +42,8 @@ ws.onmessage = function (e) {
 };
 
 
+function connectListeners() {
+  document.addEventListener("mousemove", update );
+}
 
-document.addEventListener("mousemove", update );
+window.addEventListener("load", connectListeners );

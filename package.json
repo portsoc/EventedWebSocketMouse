@@ -4,7 +4,7 @@
   "description": "Event Driven Web-Socket Mouse Sharing Thing",
   "main": "svr.js",
   "scripts": {
-    "test": "node svr.js"
+    "test": "node --use_strict svr.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,9 @@
     "connect": "^3.5.0",
     "serve-static": "^1.11.1",
     "ws": "^1.1.1"
+  },
+  "jshintConfig": {
+      "node": true,
+      "browser": true
   }
 }

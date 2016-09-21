@@ -30,7 +30,7 @@ var
 		wss.on('connection', ws_responder);
 
 		connect().use(serveStatic(".")).listen(8080);
-		console.log("WS Listening on:", ipaddr + ":9090")
+		console.log("WS Listening on:", ipaddr + ":9090");
 		console.log("Visit: http://"+ipaddr + ":" + 8080);
 
 	};
