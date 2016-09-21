@@ -1,6 +1,4 @@
 var
-    game,
-    player,
     d,
     ws = new WebSocket("ws://" + window.location.hostname + ":9090/"),
     myid = new Date().toString().replace(/[\W]+/g, ""),
@@ -8,13 +6,15 @@ var
 
     update = function(e) {
         ws.send(
-            JSON.stringify({
-                x: e.clientX,
-                y: e.clientY,
-                id: myid,
-                player: (player.value == "Who are you?" ? "Anon" : player.value),
-                col: col
-            })
+            JSON.stringify(
+                {
+                    x: e.pageX * 100 / document.body.scrollWidth,
+                    y: e.pageY * 100 / document.body.scrollHeight,
+                    id: myid,
+                    player: window.player.value || "Anon",
+                    col: col
+                }
+            )
         );
     }; //goodenough
 
@@ -29,29 +29,21 @@ ws.onmessage = function(e) {
         d = document.createElement("div");
         d.classList.add("out");
         d.setAttribute("id", q.id);
-        game.appendChild(d);
-
-
+        window.game.appendChild(d);
     }
 
-    d.innerHTML = "";
-    d.appendChild(
-        document.createTextNode(q.player)
-    );
+    d.textContent = q.player;
 
     d.setAttribute(
         "style",
-        "position: absolute; background: #" + q.col + ";top:" + (q.y - 20) + "px; left:" + q.x + "px;"
+        "position: absolute; background: #"+q.col+";top:"+q.y+"%; left:"+q.x+"%;"
     );
 
 };
 
 
 function connectListeners() {
-  game = document.getElementById("game");
-  player = document.getElementById("player");
   document.addEventListener("mousemove", update );
-  player.addEventListener("keyup", update);
 }
 
 window.addEventListener("load", connectListeners );

@@ -1,28 +1,44 @@
+body {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
-.out {
-    height: auto;
-    width: auto;
-    z-index: 100;
-    overflow: auto;
-    padding: 1em;
-}
-
+/* the name input box */
 input {
-    z-index: 1000;
+    z-index: 1;
+    position: fixed;
     width: 100%;
-    height: 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: .2em;
+    font-size: 1rem;
 }
 
+/* the game field */
 #game {
-    width: 100%;
-    height: 60em;
-    position: relative;
-    overflow:hidden;
-    border: dashed thin black;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
     cursor: none;
+}
+
+/* the cursor box */
+.out {
+    max-width: 10em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 1em;
 }
