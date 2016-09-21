@@ -2,7 +2,7 @@ var
 	// used to serve the static page
 	connect = require('connect'),
 	serveStatic = require('serve-static'),
-	ipaddr = require('os').networkInterfaces().en0[1].address;
+	ipaddr = require('os').networkInterfaces().en0[1].address,
 
 	// used to handle the page interactions
 	ws_svr = require('ws').Server,
