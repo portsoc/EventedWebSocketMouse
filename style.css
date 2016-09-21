@@ -6,9 +6,10 @@
 
 .out {
     height: auto;
+    max-width: 10em;
     width: auto;
-    z-index: 100;
-    overflow: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding: 1em;
 }
 
