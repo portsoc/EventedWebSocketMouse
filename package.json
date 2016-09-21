@@ -1,0 +1,28 @@
+{
+  "name": "evented-web-socket-mouse",
+  "version": "1.0.0",
+  "description": "Event Driven Web-Socket Mouse Sharing Thing",
+  "main": "svr.js",
+  "scripts": {
+    "test": "node svr.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/portsoc/EventedWebSocketMouse.git"
+  },
+  "author": "Rich Boakes <rjb@boakes.org> (http://boakes.org/)",
+  "contributors": [
+    "Rich Boakes <rjb@port.ac.uk> (http://rjb.soc.port.ac.uk/)",
+    "Jacek Kopecký <jacek@port.ac.uk> (http://jacek.soc.port.ac.uk/)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/portsoc/EventedWebSocketMouse/issues"
+  },
+  "homepage": "https://github.com/portsoc/EventedWebSocketMouse#readme",
+  "dependencies": {
+    "connect": "^3.5.0",
+    "serve-static": "^1.11.1",
+    "ws": "^1.1.1"
+  }
+}
