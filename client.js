@@ -44,4 +44,3 @@ ws.onmessage = function (e) {
 
 
 document.addEventListener("mousemove", update );
-player.addEventListener("keyup", update);
