@@ -2,7 +2,10 @@ var
     d,
     ws = new WebSocket("ws://" + window.location.hostname + ":9090/"),
     myid = new Date().toString().replace(/[\W]+/g, ""),
-    col = Math.random().toString(16).substring(2, 8),
+    col = "hsl(" +
+              (Math.random()*360) + ", " + // random hue
+              ((1-Math.pow(1-Math.random(), 2))*100) + "%, " + // random (likely high) saturation
+              (Math.sqrt(Math.sqrt(Math.random()))* 50) + "%)", // random (likely high) lightness up to 50%
 
     update = function(e) {
         ws.send(
@@ -36,7 +39,7 @@ ws.onmessage = function(e) {
 
     d.setAttribute(
         "style",
-        "position: absolute; background: #"+q.col+";top:"+q.y+"%; left:"+q.x+"%;"
+        "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
     );
 
 };
