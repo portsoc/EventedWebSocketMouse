@@ -8,8 +8,8 @@ var
         ws.send(
             JSON.stringify(
                 {
-                    x: e.clientX,
-                    y: e.clientY,
+                    x: e.pageX * 100 / document.body.scrollWidth,
+                    y: e.pageY * 100 / document.body.scrollHeight,
                     id: myid,
                     player: (player.value == "Who are you?" ? "Anon" : player.value),
                     col: col
@@ -41,7 +41,7 @@ ws.onmessage = function (e) {
 
     d.setAttribute(
         "style",
-        "position: absolute; background: #"+q.col+";top:"+(q.y-20)+"px; left:"+q.x+"px;"
+        "position: absolute; background: #"+q.col+";top:"+q.y+"%; left:"+q.x+"%;"
     );
 
 };
