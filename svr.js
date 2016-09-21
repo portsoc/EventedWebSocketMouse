@@ -14,11 +14,19 @@ var
 
 	ws_responder = function(ws) {
 
+    // on connection, send an init packet with a new id
+    ws.send(
+      JSON.stringify(
+        {
+          "type": "init",
+          "myid": ws.upgradeReq.connection.remoteAddress
+        }
+      )
+    );
+
 		ws.on(
 			'message',
 			function(message) {
-				// console.log('received: %s', message);
-
 				for (var i = wss.clients.length - 1; i >= 0; i--) {
 					wss.clients[i].send(message);
 				}
