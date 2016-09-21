@@ -30,14 +30,9 @@ ws.onmessage = function (e) {
         d.classList.add("out");
         d.setAttribute("id", q.id);
         game.appendChild(d);
-
-
     }
 
-    d.innerHTML = "";
-    d.appendChild(
-        document.createTextNode(q.player)
-    );
+    d.textContent = q.player;
 
     d.setAttribute(
         "style",
