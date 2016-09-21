@@ -1,0 +1,28 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.out {
+    height: auto;
+    width: auto;
+    z-index: 100;
+    overflow: auto;
+    padding: 1em;
+}
+
+input {
+    z-index: 1000;
+    width: 100%;
+    height: 20px;
+}
+
+#game {
+    width: 100%;
+    height: 60em;
+    position: relative;
+    overflow:hidden;
+    border: dashed thin black;
+    cursor: none;
+}
