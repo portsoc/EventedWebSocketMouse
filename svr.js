@@ -3,6 +3,7 @@ var
 	connect = require('connect'),
 	serveStatic = require('serve-static'),
 	ipaddr = require('os').networkInterfaces().en0[1].address,
+  counter = 0,
 
 	// used to handle the page interactions
 	ws_svr = require('ws').Server,
@@ -19,7 +20,7 @@ var
       JSON.stringify(
         {
           "type": "init",
-          "myid": ws.upgradeReq.connection.remoteAddress
+          "myid": `${ws.upgradeReq.connection.remoteAddress}_${++counter}`
         }
       )
     );
