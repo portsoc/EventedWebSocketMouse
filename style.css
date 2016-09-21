@@ -41,4 +41,5 @@ input {
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 1em;
+    color: #fff;
 }
