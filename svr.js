@@ -19,12 +19,18 @@ var
 			function(message) {
 				// console.log('received: %s', message);
 
-				for (var i = wss.clients.length - 1; i >= 0; i--) {
-					wss.clients[i].send(message);
-				}
+        wss.clients.forEach( (client) => {
+          if(client.readyState === client.OPEN){
+            try {
+              client.send(message);
+            } catch (e) {
+            }
+          }
+        });
 			}
 		);
 	},
+
 
 	start = function() {
 		wss.on('connection', ws_responder);
