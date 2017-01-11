@@ -1,44 +1,33 @@
-var
-	// used to serve the static page
-	connect = require('connect'),
-	serveStatic = require('serve-static'),
-	ipaddr = require('os').networkInterfaces().en0[1].address,
+'use strict';
 
-	// used to handle the page interactions
-	ws_svr = require('ws').Server,
-	wss = new ws_svr(
-		{
-			port: 9090
-		}
-	),
+const http = require('http');
+const wsserver = require('ws').Server;
+const express = require('express');
 
-	ws_responder = function(ws) {
+const server = http.createServer();
+const wss = new wsserver({ server: server });
+const app = express();
 
-		ws.on(
-			'message',
-			function(message) {
-				// console.log('received: %s', message);
+server.on('request', app);
 
-        wss.clients.forEach( (client) => {
-          if(client.readyState === client.OPEN){
-            try {
-              client.send(message);
-            } catch (e) {
-            }
-          }
-        });
-			}
-		);
-	},
+function ws_broadcast(message) {
+    wss.clients.forEach( (client) => {
+      if(client.readyState === client.OPEN){
+        try {
+          client.send(message);
+        } catch (e) {
+        }
+      }
+    });
+}
+
+function ws_responder(ws) {
+	ws.on( 'message', ws_broadcast );
+}
 
 
-	start = function() {
-		wss.on('connection', ws_responder);
+app.use(express.static(__dirname + '/webpages', { extensions: ['html', 'css', 'js'] }));
 
-		connect().use(serveStatic(".")).listen(8080);
-		console.log("WS Listening on:", ipaddr + ":9090");
-		console.log("Visit: http://"+ipaddr + ":" + 8080);
+wss.on('connection', ws_responder);
 
-	};
-
-start();
+server.listen(8080, function () { console.log('Server started.'); });

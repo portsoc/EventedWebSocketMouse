@@ -21,8 +21,7 @@
   },
   "homepage": "https://github.com/portsoc/EventedWebSocketMouse#readme",
   "dependencies": {
-    "connect": "^3.5.0",
-    "serve-static": "^1.11.1",
+    "express": "^4.14.0",
     "ws": "^1.1.1"
   },
   "jshintConfig": {
