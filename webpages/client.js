@@ -1,8 +1,7 @@
-var
+let
     ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
     myid = new Date().toString().replace(/[\W]+/g, ""),
     col = generateRandomColor();
-
 
 function generateRandomColor() {
   var hue = Math.random() * 360;
@@ -40,6 +39,7 @@ function receivedMessageFromServer(e) {
         d = document.createElement("div");
         d.classList.add("out");
         d.setAttribute("id", q.id);
+        d.dataset.lastUpdated = Date.now();
         window.game.appendChild(d);
     }
 
@@ -53,9 +53,23 @@ function receivedMessageFromServer(e) {
 
 };
 
+//
+function sweepForDeadPlayers() {
+  let allOut = document.querySelectorAll(".out");
+  let deadTime = Date.now() - (1000 * 5);
+  for (let node of allOut) {
+    if (node.dataset.lastUpdated < deadTime) {
+      node.remove();
+    }
+  }
+
+}
+
+
 function connectListeners() {
   document.addEventListener("mousemove", theMouseWasMoved );
   ws.addEventListener("message", receivedMessageFromServer );
+  setInterval(sweepForDeadPlayers, 1000);
 }
 
 window.addEventListener("load", connectListeners );
