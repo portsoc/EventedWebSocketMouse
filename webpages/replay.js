@@ -3,8 +3,7 @@ let events = [];
 
 let dataRequest = new XMLHttpRequest();
 dataRequest.addEventListener('load', ev => {
-  events = JSON.parse(ev.responseText);
-  console.log(events);
+  events = JSON.parse(ev.target.responseText);
 });
 dataRequest.open('GET', 'http://' + location.hostname + ':' + (location.port || 80) + '/replay.json');
 dataRequest.send();
