@@ -23,8 +23,9 @@ const objectForEach = (obj, runnable) => {
 };
 
 function ws_broadcast(message) {
-  if (message.hasOwnProperty('replay') && message['replay']) {
-    replayClients.push(message['id']);
+  const jsonMessage = JSON.parse(message);
+  if (jsonMessage.hasOwnProperty('replay') && jsonMessage['replay']) {
+    replayClients.push(jsonMessage['id']);
   }
   else {
     objectForEach(allClients, (id, client) => {
@@ -44,14 +45,11 @@ function ws_responder(ws) {
   let id = new Date().toString().replace(/[\W]+/g, "");
   ws.send(JSON.stringify({'your_id': id}));
   allClients[id] = ws;
-	ws.on('message', ws_broadcast);
+  ws.on('message', ws_broadcast);
 }
 
 
 app.use(express.static(__dirname + '/webpages', { extensions: ['html', 'css', 'js'] }));
-app.get('/replay', (req, res) => {
-  res.sendFile(path.join(__dirname + '/webpages/replay.html'));
-});
 app.get('/replay.json', (req, res) => {
   res.set('Content-Type', 'application/javascript');
   res.end(JSON.stringify(events));
