@@ -2,7 +2,16 @@ let ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.locati
 let events = [];
 
 const renderEvent = evt => {
-  console.log('rendering', evt);
+  const el = document.getElementById(evt.id);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = evt.id;
+    el.classList.add('out');
+  }
+  el.setAttribute(
+      "style",
+      "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
+  );
 };
 
 const runReplay = () => {
