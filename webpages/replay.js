@@ -1,4 +1,3 @@
-let ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
 let events = [];
 
 const renderEvent = evt => {
@@ -11,7 +10,7 @@ const renderEvent = evt => {
   }
   el.setAttribute(
       "style",
-      "position: absolute; background:" + el.col + "; top:" + el.y + "%; left:" + el.x + "%;"
+      "position: absolute; background:" + evt.col + "; top:" + evt.y + "%; left:" + evt.x + "%;"
   );
 };
 
