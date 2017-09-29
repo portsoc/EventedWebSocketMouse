@@ -14,6 +14,11 @@ Clone the source:
 git clone https://github.com/portsoc/EventedWebSocketMouse.git
 ```
 
+Change into the newly created folder:
+```
+cd EventedWebSocketMouse
+```
+
 Install the dependencies
 ```
 npm install
