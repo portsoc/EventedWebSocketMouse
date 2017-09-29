@@ -10,7 +10,7 @@ const renderEvent = evt => {
   }
   el.setAttribute(
       "style",
-      "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
+      "position: absolute; background:" + el.col + "; top:" + el.y + "%; left:" + el.x + "%;"
   );
 };
 
