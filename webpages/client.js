@@ -1,12 +1,12 @@
 let
-    ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
-    myid = new Date().toString().replace(/[\W]+/g, ""),
+    ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/"),
+    myid = null,
     col = generateRandomColor();
 
 function generateRandomColor() {
-  var hue = Math.random() * 360;
-  var saturation = (1-Math.pow(1-Math.random(), 2)) * 100;
-  var lumens = Math.sqrt(Math.sqrt(Math.random())) * 50;
+  let hue = Math.floor(Math.random() * 360);
+  let saturation = Math.floor((1-Math.pow(1-Math.random(), 2)) * 100);
+  let lumens = Math.floor(Math.sqrt(Math.sqrt(Math.random())) * 50);
   return "hsl("+hue+", "+saturation+"%,"+lumens+"%)";
 }
 
@@ -23,15 +23,23 @@ function theMouseWasMoved(e) {
       }
     )
   );
-};
+}
 
 
 // this should run in response to any message
 // received over the websocket
 function receivedMessageFromServer(e) {
     // extract the ID from the received packet
-    var q = JSON.parse( e.data );
-    var d = document.getElementById( q.id );
+    let q = JSON.parse( e.data );
+
+    // If the server is telling us our ID, set it and then
+    // ignore the rest of this function.
+    if (q.hasOwnProperty('your_id') && q['your_id']) {
+      myid = q.your_id;
+      return;
+    }
+
+    let d = document.getElementById( q.id );
 
     // if we don't already have an element
     // with that ID, we shoudl create it.
@@ -51,7 +59,7 @@ function receivedMessageFromServer(e) {
         "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
     );
 
-};
+}
 
 //
 function sweepForDeadPlayers() {
