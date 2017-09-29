@@ -7,6 +7,7 @@ const renderEvent = evt => {
     el = document.createElement('div');
     el.id = evt.id;
     el.classList.add('out');
+    document.getElementById('game').appendChild(el);
   }
   el.setAttribute(
       "style",
