@@ -1,6 +1,6 @@
 let
     ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
-    myid = new Date().toString().replace(/[\W]+/g, ""),
+    myid = null,
     col = generateRandomColor();
 
 function generateRandomColor() {
@@ -31,6 +31,14 @@ function theMouseWasMoved(e) {
 function receivedMessageFromServer(e) {
     // extract the ID from the received packet
     var q = JSON.parse( e.data );
+
+    // If the server is telling us our ID, set it and then
+    // ignore the rest of this function.
+    if (q.hasOwnProperty('your_id') && q['your_id']) {
+      myid = q.your_id;
+      return;
+    }
+
     var d = document.getElementById( q.id );
 
     // if we don't already have an element
