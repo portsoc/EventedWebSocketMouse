@@ -2,7 +2,7 @@ let ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.locati
 let events = [];
 
 const renderEvent = evt => {
-  const el = document.getElementById(evt.id);
+  let el = document.getElementById(evt.id);
   if (!el) {
     el = document.createElement('div');
     el.id = evt.id;
