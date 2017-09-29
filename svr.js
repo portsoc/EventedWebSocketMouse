@@ -1,7 +1,6 @@
 'use strict';
 
 const http = require('http');
-const path = require('path');
 const wsserver = require('ws').Server;
 const express = require('express');
 
@@ -12,39 +11,23 @@ const app = express();
 server.on('request', app);
 
 const events = [];
-const allClients = {};
-const replayClients = [];
-
-const objectForEach = (obj, runnable) => {
-  let keys = Object.keys(obj);
-  for (let i = 0; i < keys.length; i++) {
-    runnable.call(obj, keys[i], obj[keys[i]]);
-  }
-};
 
 function ws_broadcast(message) {
-  const jsonMessage = JSON.parse(message);
-  if (jsonMessage.hasOwnProperty('replay') && jsonMessage['replay']) {
-    replayClients.push(jsonMessage['id']);
-  }
-  else {
-    objectForEach(allClients, (id, client) => {
-      if (client.readyState === client.OPEN && replayClients.indexOf(id) === -1) {
-        try {
-          client.send(message);
-        } catch (e) {
-          console.warn(`Failed to send WebSocket message: ${e}`);
-        }
+  wss.clients.forEach(client => {
+    if (client.readyState === client.OPEN) {
+      try {
+        client.send(message);
+      } catch (e) {
+        console.warn(`Failed to send WebSocket message: ${e}`);
       }
-    });
-    events.push(Object.assign(JSON.parse(message), { 'timestamp': Date.now() }));
-  }
+    }
+  });
+  events.push(Object.assign(JSON.parse(message), { 'timestamp': Date.now() }));
 }
 
 function ws_responder(ws) {
   let id = new Date().toString().replace(/[\W]+/g, "");
   ws.send(JSON.stringify({'your_id': id}));
-  allClients[id] = ws;
   ws.on('message', ws_broadcast);
 }
 
