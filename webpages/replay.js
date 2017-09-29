@@ -8,6 +8,7 @@ const renderEvent = evt => {
     el.classList.add('out');
     document.getElementById('game').appendChild(el);
   }
+  el.textContent = evt.player;
   el.setAttribute(
       "style",
       "position: absolute; background:" + evt.col + "; top:" + evt.y + "%; left:" + evt.x + "%;"
