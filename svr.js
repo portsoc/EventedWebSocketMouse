@@ -53,7 +53,7 @@ app.get('/replay', (req, res) => {
   res.sendFile(path.join(__dirname + '/webpages/replay.html'));
 });
 app.get('/replay.json', (req, res) => {
-  res.headers['Content-Type'] = 'application/json';
+  res.set('Content-Type', 'application/javascript');
   res.end(JSON.stringify(events));
 });
 
