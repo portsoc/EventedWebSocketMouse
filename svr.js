@@ -52,6 +52,10 @@ app.use(express.static(__dirname + '/webpages', { extensions: ['html', 'css', 'j
 app.get('/replay', (req, res) => {
   res.sendFile(path.join(__dirname + '/webpages/replay.html'));
 });
+app.get('/replay.json', (req, res) => {
+  res.headers['Content-Type'] = 'application/json';
+  res.end(JSON.stringify(events));
+});
 
 wss.on('connection', ws_responder);
 
