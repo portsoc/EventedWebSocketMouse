@@ -27,7 +27,6 @@ function ws_broadcast(message) {
     replayClients.push(message['id']);
   }
   else {
-    events.push(message);
     objectForEach(allClients, (id, client) => {
       if (client.readyState === client.OPEN && replayClients.indexOf(id) === -1) {
         try {
@@ -37,6 +36,7 @@ function ws_broadcast(message) {
         }
       }
     });
+    events.push(Object.assign(JSON.parse(message), { 'timestamp': Date.now() }));
   }
 }
 
