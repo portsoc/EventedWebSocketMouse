@@ -41,7 +41,7 @@ function ws_broadcast(message) {
 
 function ws_responder(ws) {
   let id = new Date().toString().replace(/[\W]+/g, "");
-  ws.send({'your_id': id});
+  ws.send(JSON.stringify({'your_id': id}));
   allClients[id] = ws;
 	ws.on('message', ws_broadcast);
 }
