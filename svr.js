@@ -10,7 +10,26 @@ const app = express();
 
 server.on('request', app);
 
+/**
+ * Events schema:
+ * 2D array. Each element (el):
+ *  el[0] - x - client mouse X position, in % of page width
+ *  el[1] - y - client mouse Y position, in % of page height
+ *  el[2] - id - server-assigned ID based on date
+ *  el[3] - player - player username
+ *  el[4] - col - player indicator background color
+ *  el[5] - timestamp - Unix timestamp for event
+ */
 const events = [];
+
+const dataKeys = ['x', 'y', 'id', 'player', 'col', 'timestamp'];
+const clientDataToArray = obj => {
+  let ary = [];
+  for (let key of dataKeys) {
+    ary.push(obj[key]);
+  }
+  return ary;
+};
 
 function ws_broadcast(message) {
   wss.clients.forEach(client => {
@@ -22,12 +41,12 @@ function ws_broadcast(message) {
       }
     }
   });
-  events.push(Object.assign(JSON.parse(message), { 'timestamp': Date.now() }));
+  events.push(clientDataToArray(Object.assign(JSON.parse(message), { 'timestamp': Date.now() })));
 }
 
+let idCounter = 0;
 function ws_responder(ws) {
-  let id = new Date().toString().replace(/[\W]+/g, "");
-  ws.send(JSON.stringify({'your_id': id}));
+  ws.send(JSON.stringify({'your_id': ++idCounter}));
   ws.on('message', ws_broadcast);
 }
 

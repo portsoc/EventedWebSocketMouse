@@ -1,17 +1,17 @@
 let events = [];
 
 const renderEvent = evt => {
-  let el = document.getElementById(evt.id);
+  let el = document.getElementById(evt[2]);
   if (!el) {
     el = document.createElement('div');
-    el.id = evt.id;
+    el.id = evt[2];
     el.classList.add('out');
     document.getElementById('game').appendChild(el);
   }
-  el.textContent = evt.player;
+  el.textContent = evt[3];
   el.setAttribute(
       "style",
-      "position: absolute; background:" + evt.col + "; top:" + evt.y + "%; left:" + evt.x + "%;"
+      "position: absolute; background:" + evt[4] + "; top:" + evt[1] + "%; left:" + evt[0] + "%;"
   );
 };
 
@@ -23,12 +23,12 @@ const runReplay = () => {
   }
 
   // Doing this gets us relative timestamps instead of absolute, which makes timing easier.
-  const firstEventTimestamp = events[0].timestamp;
-  events = events.map(x => Object.assign(x, { 'timestamp': x.timestamp - firstEventTimestamp }));
+  const firstEventTimestamp = events[0][5];
+  events.forEach(x => x[5] = x[5] - firstEventTimestamp);
 
   const simulationStart = Date.now();
   events.forEach(x => {
-    const runAt = simulationStart + x.timestamp;
+    const runAt = simulationStart + x[5];
     const millisUntilRun = runAt - Date.now();
     setTimeout(() => {
       renderEvent(x);
