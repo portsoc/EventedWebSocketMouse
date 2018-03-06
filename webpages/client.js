@@ -1,13 +1,13 @@
-let
-    ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
-    myid = new Date().toString().replace(/[\W]+/g, ""),
-    col = generateRandomColor();
+const ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
+const myid = Math.random().toString(36).substring(2);
+const lifetime = 5000; // milliseconds to live
+const saturation = Math.floor(50+50*Math.random());
+const lumens = Math.floor(50+10*Math.random());
+let hue = Math.floor(360*Math.random());
 
-function generateRandomColor() {
-  var hue = Math.random() * 360;
-  var saturation = (1-Math.pow(1-Math.random(), 2)) * 100;
-  var lumens = Math.sqrt(Math.sqrt(Math.random())) * 50;
-  return "hsl("+hue+", "+saturation+"%,"+lumens+"%)";
+function color() {
+  hue = (hue+0.1) % 360;
+  return `hsl(${hue}, ${saturation}%, ${lumens}%)`;
 }
 
 
@@ -15,11 +15,11 @@ function theMouseWasMoved(e) {
   ws.send(
     JSON.stringify(
       {
-        x: e.pageX * 100 / document.body.scrollWidth,
-        y: e.pageY * 100 / document.body.scrollHeight,
+        x: (e.pageX * 100 / document.body.scrollWidth).toFixed(2),
+        y: (e.pageY * 100 / document.body.scrollHeight).toFixed(2),
         id: myid,
         player: window.player.value || "Anon",
-        col: col
+        col: color()
       }
     )
   );
@@ -29,12 +29,14 @@ function theMouseWasMoved(e) {
 // this should run in response to any message
 // received over the websocket
 function receivedMessageFromServer(e) {
+
     // extract the ID from the received packet
-    var q = JSON.parse( e.data );
-    var d = document.getElementById( q.id );
+    const q = JSON.parse( e.data );
+
+    let d = document.getElementById( q.id );
 
     // if we don't already have an element
-    // with that ID, we shoudl create it.
+    // with that ID, we should create it.
     if (!d) {
         d = document.createElement("div");
         d.classList.add("out");
@@ -56,7 +58,7 @@ function receivedMessageFromServer(e) {
 //
 function sweepForDeadPlayers() {
   let allOut = document.querySelectorAll(".out");
-  let deadTime = Date.now() - (1000 * 5);
+  let deadTime = Date.now() - lifetime;
   for (let node of allOut) {
     if (node.dataset.lastUpdated < deadTime) {
       node.remove();
