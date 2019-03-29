@@ -1,7 +1,7 @@
 /// An excessively commented example.
 
 // configuration
-const port = 8888;
+const port = process.env.PORT || 8888;
 
 // libraries
 const express = require('express');
