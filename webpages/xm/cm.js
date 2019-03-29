@@ -9,18 +9,31 @@ const height=1000;
 const widthmult = width/100;
 const heightmult = height/100;
 
+const ID_TIMEOUT = 5000;
+const idCounts = {};
+function countIDs(id) {
+  const now = Date.now();
+  if (id) idCounts[id] = Date.now() + ID_TIMEOUT;
+  for (const key of Object.keys(idCounts)) {
+    if (idCounts[key] < now) delete idCounts[key];
+  }
+  return Object.keys(idCounts).length;
+}
+
 
 // this should run in response to any message
 // received over the websocket
 function receivedMessageFromServer(e) {
-    // extract the ID from the received packet
-    const q = JSON.parse( e.data );
+  // extract the ID from the received packet
+  const q = JSON.parse( e.data );
 
-    ctx.beginPath();
-    ctx.arc(q.x * widthmult, q.y*heightmult, 20, 0, TAU);
-    ctx.closePath();
-    ctx.fillStyle = q.col;
-    ctx.fill();
+  const players = countIDs(q.id);
+
+  ctx.beginPath();
+  ctx.arc(q.x * widthmult, q.y*heightmult, 40/players, 0, TAU);
+  ctx.closePath();
+  ctx.fillStyle = q.col;
+  ctx.fill();
 };
 
 
@@ -73,11 +86,11 @@ function step() {
     for (let x = width-1; x >= 0; x--) {
       const above = xyToArr(x, y);
       const below = xyToArr(jiggle(x), y+1);
-      if (img.data[below + 3] == 0 && img.data[above + 3] != 0) {
+      if (img.data[below + 3] === 0 && img.data[above + 3] !== 0) {
         swapPixels(img.data, above, below);
       }
-      if (img.data[above +3] > 0) {
-        img.data[above +3] -=1;
+      if (img.data[above + 3] > 0) {
+        img.data[above + 3] -= 1;
       }
     }
   }
