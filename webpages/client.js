@@ -1,13 +1,20 @@
 const ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
 const myid = Math.random().toString(36).substring(2);
 const lifetime = 5000; // milliseconds to live
-const saturation = Math.floor(50+50*Math.random());
-const lumens = Math.floor(50+10*Math.random());
-let hue = Math.floor(360*Math.random());
 
-function color() {
-  hue = (hue+0.1) % 360;
-  return `hsl(${hue}, ${saturation}%, ${lumens}%)`;
+const shiftingColour = {
+  saturation: Math.floor(50+50*Math.random()),
+  lightness: Math.floor(50+10*Math.random()),
+  hue: Math.floor(360*Math.random()),
+
+  shift() {
+    this.hue = (this.hue+0.1) % 360;
+  },
+
+  get css() {
+    this.shift();
+    return `hsl(${this.hue}, ${this.saturation}%, ${this.lightness}%)`;
+  },
 }
 
 
@@ -19,7 +26,7 @@ function theMouseWasMoved(e) {
         y: (e.pageY * 100 / document.body.scrollHeight).toFixed(2),
         id: myid,
         player: window.player.value || "Anon",
-        col: color()
+        col: shiftingColour.css,
       }
     )
   );
