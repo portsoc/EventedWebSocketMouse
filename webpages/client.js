@@ -56,9 +56,11 @@ function receivedMessageFromServer(e) {
   // the current status sent from the server
   el.dataset.lastUpdated = Date.now();
   el.textContent = msg.player;
+  const x = msg.x * document.body.scrollWidth / 100;
+  const y = msg.y * document.body.scrollHeight / 100;
   el.setAttribute(
     "style",
-    `position: absolute; background:${msg.col}; top:${msg.y}%; left:${msg.x}%;`
+    `background:${msg.col}; transform:translate(${x}px,${y}px);`
   );
 
 };

@@ -38,8 +38,12 @@ input {
 /* the cursor box */
 .out {
     max-width: 10em;
+    max-height: 4em;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 1em;
     color: #fff;
+    position: absolute;
+    top:0;
+    left:0;
 }

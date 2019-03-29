@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "eslint": "^5.15.3",
-    "eslint-config-node": "^4.0.0"
+    "eslint-config-node": "^4.0.0",
+    "nodemon": "^1.18.10"
   }
 }
