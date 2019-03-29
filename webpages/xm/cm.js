@@ -11,13 +11,14 @@ const heightmult = height/100;
 
 const ID_TIMEOUT = 5000;
 const idCounts = {};
+let players = 1;
 function countIDs(id) {
   const now = Date.now();
   if (id) idCounts[id] = Date.now() + ID_TIMEOUT;
   for (const key of Object.keys(idCounts)) {
     if (idCounts[key] < now) delete idCounts[key];
   }
-  return Object.keys(idCounts).length;
+  return Object.keys(idCounts).length || 1;
 }
 
 
@@ -27,10 +28,10 @@ function receivedMessageFromServer(e) {
   // extract the ID from the received packet
   const q = JSON.parse( e.data );
 
-  const players = countIDs(q.id);
+  players = countIDs(q.id);
 
   ctx.beginPath();
-  ctx.arc(q.x * widthmult, q.y*heightmult, 40/players, 0, TAU);
+  ctx.arc(q.x * widthmult, q.y*heightmult, 20/Math.log(players+1), 0, TAU);
   ctx.closePath();
   ctx.fillStyle = q.col;
   ctx.fill();
@@ -90,7 +91,7 @@ function step() {
         swapPixels(img.data, above, below);
       }
       if (img.data[above + 3] > 0) {
-        img.data[above + 3] -= 1;
+        img.data[above + 3] -= players;
       }
     }
   }
