@@ -47,8 +47,16 @@ window.addEventListener("load", () => {
   ws.addEventListener("message", receivedMessageFromServer );
   step();
 
+  document.addEventListener('keypress', flip);
+
   setInterval(countIDs, 1000);
 });
+
+function flip(e) {
+  if (e.key === 'f' && !e.shiftKey && !e.metaKey && !e.shiftKey && !e.ctrlKey) {
+    flipCanvas();
+  }
+}
 
 
 
@@ -99,4 +107,16 @@ function step() {
   }
   ctx.putImageData(img, 0, 0, 0, 0, width, height);
   window.requestAnimationFrame(step);
+}
+
+function flipCanvas() {
+  let img = ctx.getImageData(0, 0, width,height);
+  for (let y = 0; y <= Math.floor(height/2); y++) {
+    for (let x = width-1; x >= 0; x--) {
+      const above = xyToArr(x, y);
+      const below = xyToArr(x, height-1-y);
+      swapPixels(img.data, above, below);
+    }
+  }
+  ctx.putImageData(img, 0, 0, 0, 0, width, height);
 }
