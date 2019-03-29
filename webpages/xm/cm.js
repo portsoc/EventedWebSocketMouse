@@ -9,18 +9,24 @@ const height=1000;
 const widthmult = width/100;
 const heightmult = height/100;
 
-const ID_TIMEOUT = 1000;
-const idCounts = {};
-let players = 1;
-function countIDs(id) {
-  const now = Date.now();
-  if (id) idCounts[id] = Date.now() + ID_TIMEOUT;
-  for (const key of Object.keys(idCounts)) {
-    if (idCounts[key] < now) delete idCounts[key];
-  }
-  return Object.keys(idCounts).length || 1;
-}
+const players = {
+  ID_TIMEOUT: 1000,
+  counts: {},
+  players: 1,
+  size: 1,
+  fade: 1,
 
+  countIDs(id) {
+    const now = Date.now();
+    if (id) this.counts[id] = Date.now() + this.ID_TIMEOUT;
+    for (const key of Object.keys(this.counts)) {
+      if (this.counts[key] < now) delete this.counts[key];
+    }
+    this.players = Object.keys(this.counts).length || 1;
+    this.size = 1/Math.log(this.players+1);
+    this.fade = Math.round(Math.log(this.players+1));
+  },
+};
 
 // this should run in response to any message
 // received over the websocket
@@ -28,10 +34,10 @@ function receivedMessageFromServer(e) {
   // extract the ID from the received packet
   const q = JSON.parse( e.data );
 
-  players = countIDs(q.id);
+  players.countIDs(q.id);
 
   ctx.beginPath();
-  ctx.arc(q.x * widthmult, q.y*heightmult, 20/Math.log(players+1), 0, TAU);
+  ctx.arc(q.x * widthmult, q.y*heightmult, 20*players.size, 0, TAU);
   ctx.closePath();
   ctx.fillStyle = q.col;
   ctx.fill();
@@ -49,7 +55,7 @@ window.addEventListener("load", () => {
 
   document.addEventListener('keypress', flip);
 
-  setInterval(countIDs, 1000);
+  setInterval(player.countIDs.bind(player), 1000);
 });
 
 function flip(e) {
@@ -101,7 +107,7 @@ function step() {
         swapPixels(img.data, above, below);
       }
       if (img.data[above + 3] > 0) {
-        img.data[above + 3] -= Math.round(Math.log(players+1));
+        img.data[below + 3] -= players.fade;
       }
     }
   }
