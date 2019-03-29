@@ -20,17 +20,16 @@ const shiftingColour = {
 
 
 function theMouseWasMoved(e) {
-  ws.send(
-    JSON.stringify(
-      {
-        x: (e.pageX * 100 / document.body.scrollWidth).toFixed(2),
-        y: (e.pageY * 100 / document.body.scrollHeight).toFixed(2),
-        id: myid,
-        player: window.player.value || "Anon",
-        col: shiftingColour.css,
-      }
-    )
-  );
+  const x = (e.pageX * 100 / document.body.scrollWidth).toFixed(2);
+  const y = (e.pageY * 100 / document.body.scrollHeight).toFixed(2);
+  const message = {
+    x,
+    y,
+    id: myid,
+    player: window.player.value || "Anon",
+    col: shiftingColour.css,
+  };
+  ws.send(JSON.stringify(message));
 };
 
 
@@ -38,36 +37,37 @@ function theMouseWasMoved(e) {
 // received over the websocket
 function receivedMessageFromServer(e) {
 
-  // extract the ID from the received packet
-  const q = JSON.parse( e.data );
+  // we receive a JSON string, need to parse it into an object
+  const msg = JSON.parse( e.data );
 
-  let d = document.getElementById( q.id );
+  // find the element for the received ID
+  let el = document.getElementById( msg.id );
 
   // if we don't already have an element
-  // with that ID, we should create it.
-  if (!d) {
-    d = document.createElement("div");
-    d.classList.add("out");
-    d.setAttribute("id", q.id);
-    d.dataset.lastUpdated = Date.now();
-    window.game.appendChild(d);
+  // with that ID, we should create it
+  if (!el) {
+    el = document.createElement("div");
+    el.classList.add("out");
+    el.setAttribute("id", msg.id);
+    window.game.appendChild(el);
   }
 
-  // modify the content and position to reflect the current status
-  // sent from the server.
-  d.textContent = q.player;
-  d.setAttribute(
+  // modify the content and position of the element to reflect
+  // the current status sent from the server
+  el.dataset.lastUpdated = Date.now();
+  el.textContent = msg.player;
+  el.setAttribute(
     "style",
-    "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
+    `position: absolute; background:${msg.col}; top:${msg.y}%; left:${msg.x}%;`
   );
 
 };
 
-//
+
 function sweepForDeadPlayers() {
   let allOut = document.querySelectorAll(".out");
   let deadTime = Date.now() - LIFETIME;
-  for (let node of allOut) {
+  for (const node of allOut) {
     if (node.dataset.lastUpdated < deadTime) {
       node.remove();
     }
