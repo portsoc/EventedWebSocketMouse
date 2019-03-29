@@ -1,6 +1,7 @@
 const ws = new WebSocket("ws://" + window.location.hostname + ":" + (window.location.port || 80) + "/");
 const myid = Math.random().toString(36).substring(2);
-const lifetime = 5000; // milliseconds to live
+
+const LIFETIME = 5000; // milliseconds to live
 
 const shiftingColour = {
   saturation: Math.floor(50+50*Math.random()),
@@ -65,7 +66,7 @@ function receivedMessageFromServer(e) {
 //
 function sweepForDeadPlayers() {
   let allOut = document.querySelectorAll(".out");
-  let deadTime = Date.now() - lifetime;
+  let deadTime = Date.now() - LIFETIME;
   for (let node of allOut) {
     if (node.dataset.lastUpdated < deadTime) {
       node.remove();
