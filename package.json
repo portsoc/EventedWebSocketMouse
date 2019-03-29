@@ -4,7 +4,8 @@
   "description": "An event-driven Web-Socket-based mouse-position sharing thing.",
   "main": "svr.js",
   "scripts": {
-    "test": "nodemon svr.js"
+    "test": "nodemon svr.js",
+    "start": "node svr.js"
   },
   "repository": {
     "type": "git",
