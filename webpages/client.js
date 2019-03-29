@@ -30,28 +30,28 @@ function theMouseWasMoved(e) {
 // received over the websocket
 function receivedMessageFromServer(e) {
 
-    // extract the ID from the received packet
-    const q = JSON.parse( e.data );
+  // extract the ID from the received packet
+  const q = JSON.parse( e.data );
 
-    let d = document.getElementById( q.id );
+  let d = document.getElementById( q.id );
 
-    // if we don't already have an element
-    // with that ID, we should create it.
-    if (!d) {
-        d = document.createElement("div");
-        d.classList.add("out");
-        d.setAttribute("id", q.id);
-        d.dataset.lastUpdated = Date.now();
-        window.game.appendChild(d);
-    }
+  // if we don't already have an element
+  // with that ID, we should create it.
+  if (!d) {
+    d = document.createElement("div");
+    d.classList.add("out");
+    d.setAttribute("id", q.id);
+    d.dataset.lastUpdated = Date.now();
+    window.game.appendChild(d);
+  }
 
-    // modify the content and position to reflect the current status
-    // sent from the server.
-    d.textContent = q.player;
-    d.setAttribute(
-        "style",
-        "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
-    );
+  // modify the content and position to reflect the current status
+  // sent from the server.
+  d.textContent = q.player;
+  d.setAttribute(
+    "style",
+    "position: absolute; background:" + q.col + "; top:" + q.y + "%; left:" + q.x + "%;"
+  );
 
 };
 
