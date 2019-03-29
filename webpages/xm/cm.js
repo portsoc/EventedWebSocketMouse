@@ -9,7 +9,7 @@ const height=1000;
 const widthmult = width/100;
 const heightmult = height/100;
 
-const ID_TIMEOUT = 5000;
+const ID_TIMEOUT = 1000;
 const idCounts = {};
 let players = 1;
 function countIDs(id) {
@@ -46,6 +46,8 @@ window.addEventListener("load", () => {
   const ws = new WebSocket(wsurl);
   ws.addEventListener("message", receivedMessageFromServer );
   step();
+
+  setInterval(countIDs, 1000);
 });
 
 
@@ -91,7 +93,7 @@ function step() {
         swapPixels(img.data, above, below);
       }
       if (img.data[above + 3] > 0) {
-        img.data[above + 3] -= players;
+        img.data[above + 3] -= Math.round(Math.log(players+1));
       }
     }
   }
