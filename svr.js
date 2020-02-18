@@ -37,6 +37,30 @@ function messageHandler(message) {
   });
 }
 
+const colours = ['red', 'green', 'blue'];
+
+function randomPos() {
+  const message = JSON.stringify({
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    id: 'randomness',
+    player: 'svr',
+    col: colours.push(colours.shift()) && colours[0],
+  });
+  wss.clients.forEach((client) => {
+    if (client.readyState === client.OPEN) {
+      try {
+        client.send(message);
+      } catch (err) {
+        // errors are ignored
+      }
+    }
+  });
+  console.log('sent');
+}
+
+setInterval(randomPos, 1000);
+
 // for any messages that arrive via the ws
 // web socket, invoke the messageHandler
 function connectionHandler(ws) {

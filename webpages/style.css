@@ -47,3 +47,7 @@ input {
     top:0;
     left:0;
 }
+
+#randomness {
+    transition: transform 0.2s;
+}
