@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An event-driven Web-Socket-based mouse-position sharing thing.",
   "main": "svr.js",
+  "type": "module",
   "scripts": {
     "test": "nodemon svr.js",
     "start": "node svr.js"
@@ -22,19 +23,8 @@
   },
   "homepage": "https://github.com/portsoc/EventedWebSocketMouse#readme",
   "dependencies": {
-    "eslint-config-unobtrusive": "^1.2.2",
-    "express": "^4.16.2",
-    "ip": "^1.1.5",
-    "ws": "^1.1.5"
-  },
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-semistandard": "^15.0.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "nodemon": "^2.0.2"
+    "express": "^5.1.0",
+    "ip": "^2.0.1",
+    "ws": "^8.18.2"
   }
 }

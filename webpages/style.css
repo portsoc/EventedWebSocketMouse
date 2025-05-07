@@ -4,7 +4,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    cursor: crosshair;
+    cursor: move;
 }
 
 * {
@@ -46,4 +46,5 @@ input {
     position: absolute;
     top:0;
     left:0;
+    border-radius: 0.5em;
 }

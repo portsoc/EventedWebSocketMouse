@@ -1,31 +1,41 @@
-const ws = new WebSocket('ws://' + window.location.hostname + ':' + (window.location.port || 80) + '/');
-const myid = Math.random().toString(36).substring(2);
+// An over-commented teaching example.
 
-const LIFETIME = 5000; // milliseconds to live
+// Establish a web socket connection with the server from
+// which this page was served.
+const ws = new WebSocket('ws://' + window.location.hostname + ':' + (window.location.port || 80) + '/');
+
+// milliseconds to live
+const LIFETIME = 5000;
+
+// this ID is a base 36 string the substring(2) removes the '0.' prefix
+// we add the x to ensure it's a valid CSS selector which is useful.
+const myid = "x"+Math.random().toString(36).substring(2);
+
+const el = {};
 
 const shiftingColour = {
   saturation: Math.floor(50 + 50 * Math.random()),
   lightness: Math.floor(50 + 10 * Math.random()),
   hue: Math.floor(360 * Math.random()),
 
-  shift() {
-    this.hue = (this.hue + 0.1) % 360;
-  },
-
   get css() {
-    this.shift();
+    this.hue = (this.hue +0.2) % 360;
     return `hsl(${this.hue}, ${this.saturation}%, ${this.lightness}%)`;
   },
 };
 
 function theMouseWasMoved(e) {
+  // get the mouse x and y position and convert them to a
+  // percentage of the document body width and height.
+  // This accounts for simultaneous users with
+  // different screen sizes.
   const x = (e.pageX * 100 / document.body.scrollWidth).toFixed(2);
   const y = (e.pageY * 100 / document.body.scrollHeight).toFixed(2);
   const message = {
     x,
     y,
     id: myid,
-    player: window.player.value || 'Anon',
+    player: el.player.value || 'Anon',
     col: shiftingColour.css,
   };
   ws.send(JSON.stringify(message));
@@ -38,24 +48,26 @@ function receivedMessageFromServer(e) {
   const msg = JSON.parse(e.data);
 
   // find the element for the received ID
-  let el = document.getElementById(msg.id);
+  let user = document.getElementById(msg.id);
 
   // if we don't already have an element
   // with that ID, we should create it
-  if (!el) {
-    el = document.createElement('div');
-    el.classList.add('out');
-    el.setAttribute('id', msg.id);
-    window.game.appendChild(el);
+  if (!user) {
+    user = document.createElement('div');
+    user.classList.add('out');
+    user.setAttribute('id', msg.id);
+    window.game.append(user);
   }
 
   // modify the content and position of the element to reflect
-  // the current status sent from the server
-  el.dataset.lastUpdated = Date.now();
-  el.textContent = msg.player;
+  // the current status sent from the server.  the x and y values
+  // are percentages so must be multiplied out by the width and
+  // height of this page document body.
+  user.dataset.lastUpdated = Date.now();
+  user.textContent = msg.player;
   const x = msg.x * document.body.scrollWidth / 100;
   const y = msg.y * document.body.scrollHeight / 100;
-  el.setAttribute(
+  user.setAttribute(
     'style',
     `background:${msg.col}; transform:translate(${x}px,${y}px);`,
   );
@@ -72,6 +84,7 @@ function sweepForDeadPlayers() {
 }
 
 function connectListeners() {
+  el.player = document.querySelector('#player');
   document.addEventListener('mousemove', theMouseWasMoved);
   ws.addEventListener('message', receivedMessageFromServer);
   setInterval(sweepForDeadPlayers, 1000);
